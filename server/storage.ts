@@ -67,6 +67,10 @@ export class MemStorage implements IStorage {
     const lead: Lead = {
       ...insertLead,
       id,
+      linkedinUrl: insertLead.linkedinUrl || null,
+      avatar: insertLead.avatar || null,
+      emailContent: insertLead.emailContent || null,
+      status: insertLead.status || "ready",
       sentAt: null,
     };
     this.leads.set(id, lead);

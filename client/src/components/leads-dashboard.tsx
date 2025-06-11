@@ -3,13 +3,16 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { Send, Edit, ExternalLink, Filter, Check, Loader2 } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Send, Edit, ExternalLink, Filter, Check, Loader2, X, Search } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { api, type Lead } from "@/lib/api";
 import { useToast } from "@/hooks/use-toast";
 
 export function LeadsDashboard() {
   const [sendingLeads, setSendingLeads] = useState<Set<number>>(new Set());
+  const [showFilter, setShowFilter] = useState(false);
+  const [filterQuery, setFilterQuery] = useState("");
   const queryClient = useQueryClient();
   const { toast } = useToast();
 
@@ -53,6 +56,19 @@ export function LeadsDashboard() {
     }
   });
 
+  // Filter leads based on search query
+  const filteredLeads = leads?.filter(lead => {
+    if (!filterQuery.trim()) return true;
+    
+    const query = filterQuery.toLowerCase();
+    return (
+      lead.name.toLowerCase().includes(query) ||
+      lead.title.toLowerCase().includes(query) ||
+      lead.company.toLowerCase().includes(query) ||
+      lead.email.toLowerCase().includes(query)
+    );
+  }) || [];
+
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "sent":
@@ -71,6 +87,11 @@ export function LeadsDashboard() {
         {index < content.split('\n\n').length - 1 && <><br /><br /></>}
       </span>
     ));
+  };
+
+  const handleClearFilter = () => {
+    setFilterQuery("");
+    setShowFilter(false);
   };
 
   if (isLoading) {
@@ -127,7 +148,12 @@ export function LeadsDashboard() {
             <p className="text-gray-600 mt-1">Review AI-generated outreach messages</p>
           </div>
           <div className="flex space-x-2">
-            <Button variant="outline" size="sm">
+            <Button 
+              variant="outline" 
+              size="sm"
+              onClick={() => setShowFilter(!showFilter)}
+              className={showFilter ? "bg-blue-50 border-blue-300" : ""}
+            >
               <Filter className="h-4 w-4 mr-2" />
               Filter
             </Button>
@@ -139,9 +165,49 @@ export function LeadsDashboard() {
         </div>
       </div>
 
+      {showFilter && (
+        <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
+          <div className="flex items-center space-x-4">
+            <div className="flex-1 relative">
+              <Search className="h-4 w-4 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" />
+              <Input
+                type="text"
+                placeholder="Search by name, title, company, or email..."
+                value={filterQuery}
+                onChange={(e) => setFilterQuery(e.target.value)}
+                className="pl-10 pr-10"
+              />
+              {filterQuery && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleClearFilter}
+                  className="absolute right-2 top-1/2 transform -translate-y-1/2 h-6 w-6 p-0 hover:bg-gray-200"
+                >
+                  <X className="h-3 w-3" />
+                </Button>
+              )}
+            </div>
+            <div className="text-sm text-gray-500">
+              {filteredLeads.length} of {leads?.length || 0} leads
+            </div>
+          </div>
+        </div>
+      )}
+
       <CardContent className="p-6 space-y-6">
-        {leads.map((lead: Lead) => (
-          <div key={lead.id} className="border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
+        {filteredLeads.length === 0 && leads && leads.length > 0 ? (
+          <div className="text-center py-12">
+            <Search className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+            <h3 className="text-lg font-medium text-gray-900 mb-2">No leads match your filter</h3>
+            <p className="text-gray-600 mb-4">Try adjusting your search terms</p>
+            <Button variant="outline" onClick={handleClearFilter}>
+              Clear Filter
+            </Button>
+          </div>
+        ) : (
+          filteredLeads.map((lead: Lead) => (
+            <div key={lead.id} className="border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
             <div className="flex justify-between items-start mb-4">
               <div className="flex items-center space-x-4">
                 <Avatar className="w-12 h-12">
@@ -211,7 +277,8 @@ export function LeadsDashboard() {
               </div>
             </div>
           </div>
-        ))}
+        ))
+        )}
       </CardContent>
     </Card>
   );
