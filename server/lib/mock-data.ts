@@ -214,8 +214,8 @@ function filterCompaniesByICP(companies: MockCompany[], icp: string): MockCompan
   
   return companies.filter(company => {
     // Check location match
-    const locationMatch = company.location.toLowerCase().includes(extractLocation(icpLower)) ||
-                         extractLocation(icpLower) === "";
+    const extractedLocation = extractLocation(icpLower);
+    const locationMatch = extractedLocation === "" || company.location.toLowerCase().includes(extractedLocation);
     
     // Check industry/type match
     const industryMatch = checkIndustryMatch(company.industry.toLowerCase(), icpLower);

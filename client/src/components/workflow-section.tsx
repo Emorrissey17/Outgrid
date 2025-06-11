@@ -38,7 +38,7 @@ export function WorkflowSection() {
         active: index === 0
       })));
     },
-    onSuccess: () => {
+    onSuccess: async (data) => {
       // Complete all steps
       setSteps(prev => prev.map(step => ({
         ...step,
@@ -46,13 +46,19 @@ export function WorkflowSection() {
         active: false
       })));
       
-      // Invalidate queries to refresh data
-      queryClient.invalidateQueries({ queryKey: ["/api/stats"] });
-      queryClient.invalidateQueries({ queryKey: ["/api/leads"] });
+      // Force refresh queries to show new data
+      await queryClient.invalidateQueries({ queryKey: ["/api/stats"] });
+      await queryClient.invalidateQueries({ queryKey: ["/api/leads"] });
+      
+      // Also refetch immediately to ensure data is fresh
+      await queryClient.refetchQueries({ queryKey: ["/api/stats"] });
+      await queryClient.refetchQueries({ queryKey: ["/api/leads"] });
+      
+      console.log("Campaign created with leads:", data.leads?.length || 0);
       
       toast({
         title: "Campaign Created Successfully",
-        description: "New leads have been generated and are ready for outreach.",
+        description: `Generated ${data.leads?.length || 0} leads and ready for outreach.`,
       });
     },
     onError: (error) => {
