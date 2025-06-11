@@ -277,7 +277,7 @@ export function LeadsDashboard() {
               </div>
             </div>
           </div>
-        ))
+          ))
         )}
       </CardContent>
     </Card>
