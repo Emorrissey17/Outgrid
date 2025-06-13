@@ -15,13 +15,13 @@ export interface MockCompany {
 }
 
 export function generateMockCompanies(icp: string): MockCompany[] {
-  // Complete database of mock companies across different industries and locations
+  // Comprehensive database of mock companies across different industries and locations
   const allCompanies: MockCompany[] = [
-    // Marketing Agencies - Austin
+    // Marketing Agencies - Austin (Perfect matches)
     {
       name: "Austin Digital Solutions",
-      industry: "Digital Marketing",
-      size: "15-25 employees",
+      industry: "Digital Marketing Agency",
+      size: "18 employees",
       location: "Austin, TX",
       contacts: [
         {
@@ -35,8 +35,8 @@ export function generateMockCompanies(icp: string): MockCompany[] {
     },
     {
       name: "Growth Labs Marketing",
-      industry: "Growth Marketing",
-      size: "8-15 employees",
+      industry: "Growth Marketing Agency",
+      size: "12 employees",
       location: "Austin, TX",
       contacts: [
         {
@@ -45,6 +45,132 @@ export function generateMockCompanies(icp: string): MockCompany[] {
           email: "michael@growthlabs.co",
           linkedinUrl: "/in/michael-chen-ceo",
           avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face"
+        }
+      ]
+    },
+    {
+      name: "Lone Star Creative Agency",
+      industry: "Creative Marketing Agency",
+      size: "22 employees",
+      location: "Austin, TX",
+      contacts: [
+        {
+          name: "Jessica Rodriguez",
+          title: "Creative Director",
+          email: "jessica@lonestar.agency",
+          linkedinUrl: "/in/jessica-rodriguez-creative",
+          avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face"
+        }
+      ]
+    },
+    {
+      name: "Capital City Marketing",
+      industry: "Full-Service Marketing Agency",
+      size: "8 employees",
+      location: "Austin, TX",
+      contacts: [
+        {
+          name: "David Kim",
+          title: "Managing Partner",
+          email: "david@capitalcitymarketing.com",
+          linkedinUrl: "/in/david-kim-marketing",
+          avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face"
+        }
+      ]
+    },
+    
+    // Marketing Agencies - Austin (Outside range but still relevant)
+    {
+      name: "Big Sky Marketing Group",
+      industry: "Marketing Agency",
+      size: "45 employees",
+      location: "Austin, TX",
+      contacts: [
+        {
+          name: "Amanda Foster",
+          title: "VP of Client Services",
+          email: "amanda@bigskymarketing.com",
+          linkedinUrl: "/in/amanda-foster-marketing",
+          avatar: "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=150&h=150&fit=crop&crop=face"
+        }
+      ]
+    },
+    {
+      name: "Micro Marketing Co",
+      industry: "Boutique Marketing Agency",
+      size: "3 employees",
+      location: "Austin, TX",
+      contacts: [
+        {
+          name: "Tom Wilson",
+          title: "Owner",
+          email: "tom@micromarketing.co",
+          linkedinUrl: "/in/tom-wilson-marketing",
+          avatar: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=150&h=150&fit=crop&crop=face"
+        }
+      ]
+    },
+    
+    // Marketing Agencies - Near Austin
+    {
+      name: "Round Rock Digital",
+      industry: "Digital Marketing Agency",
+      size: "15 employees",
+      location: "Round Rock, TX",
+      contacts: [
+        {
+          name: "Lisa Chang",
+          title: "CEO",
+          email: "lisa@roundrockdigital.com",
+          linkedinUrl: "/in/lisa-chang-digital",
+          avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&h=150&fit=crop&crop=face"
+        }
+      ]
+    },
+    {
+      name: "Cedar Park Creative",
+      industry: "Marketing & Advertising Agency",
+      size: "19 employees",
+      location: "Cedar Park, TX",
+      contacts: [
+        {
+          name: "Robert Taylor",
+          title: "Creative Director",
+          email: "robert@cedarparkcreatve.com",
+          linkedinUrl: "/in/robert-taylor-creative",
+          avatar: "https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?w=150&h=150&fit=crop&crop=face"
+        }
+      ]
+    },
+    
+    // Other Industries - Austin (Should rank lower for marketing agency searches)
+    {
+      name: "Austin Tech Consulting",
+      industry: "Technology Consulting",
+      size: "25 employees",
+      location: "Austin, TX",
+      contacts: [
+        {
+          name: "Jennifer Park",
+          title: "Director of Operations",
+          email: "jennifer@austintech.co",
+          linkedinUrl: "/in/jennifer-park-ops",
+          avatar: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&h=150&fit=crop&crop=face"
+        }
+      ]
+    },
+    {
+      name: "Hill Country Real Estate",
+      industry: "Real Estate",
+      size: "12 employees",
+      location: "Austin, TX",
+      contacts: [
+        {
+          name: "Mark Davis",
+          title: "Broker",
+          email: "mark@hillcountryrealty.com",
+          linkedinUrl: "/in/mark-davis-realtor",
+          avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop&crop=face"
         }
       ]
     },

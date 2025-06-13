@@ -23,6 +23,12 @@ export const leads = pgTable("leads", {
   emailContent: text("email_content"),
   status: text("status").notNull().default("ready"), // ready, sent, responded
   sentAt: timestamp("sent_at"),
+  // Enhanced CRM fields
+  companySize: text("company_size"), // e.g., "20 employees", "5-25 employees"
+  industry: text("industry"),
+  location: text("location"),
+  matchScore: integer("match_score").default(0), // 0-100 ranking score
+  matchReason: text("match_reason"), // Why this lead was ranked this way
 });
 
 export const stats = pgTable("stats", {
