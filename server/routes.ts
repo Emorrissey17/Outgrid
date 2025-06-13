@@ -28,6 +28,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Get paginated leads
+  app.get("/api/leads/paginated", async (req, res) => {
+    try {
+      const page = parseInt(req.query.page as string) || 1;
+      const limit = parseInt(req.query.limit as string) || 20;
+      const offset = (page - 1) * limit;
+      
+      const allLeads = await storage.getLeads();
+      const total = allLeads.length;
+      const totalPages = Math.ceil(total / limit);
+      const leads = allLeads.slice(offset, offset + limit);
+      
+      res.json({ leads, total, totalPages, currentPage: page });
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch paginated leads" });
+    }
+  });
+
   // Create a new campaign and generate leads
   app.post("/api/campaigns", async (req, res) => {
     try {

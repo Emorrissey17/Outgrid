@@ -35,6 +35,10 @@ export interface Lead {
   socialProfiles?: string; // JSON object
   keyPersonnel?: string; // JSON array
   detailsResearched?: boolean;
+  // User interaction fields
+  notes?: string;
+  starred?: boolean;
+  createdAt?: string;
 }
 
 export interface Stats {
@@ -52,6 +56,21 @@ export const api = {
 
   async researchLead(leadId: number): Promise<Lead> {
     const response = await apiRequest("POST", `/api/leads/${leadId}/research`);
+    return response.json();
+  },
+
+  async updateLeadNotes(leadId: number, notes: string): Promise<Lead> {
+    const response = await apiRequest("PATCH", `/api/leads/${leadId}`, { notes });
+    return response.json();
+  },
+
+  async toggleLeadStar(leadId: number, starred: boolean): Promise<Lead> {
+    const response = await apiRequest("PATCH", `/api/leads/${leadId}`, { starred });
+    return response.json();
+  },
+
+  async getLeadsPaginated(page: number = 1, limit: number = 20): Promise<{ leads: Lead[]; total: number; totalPages: number }> {
+    const response = await apiRequest("GET", `/api/leads/paginated?page=${page}&limit=${limit}`);
     return response.json();
   },
 

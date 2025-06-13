@@ -1,6 +1,7 @@
 import { StatsBar } from "@/components/stats-bar";
 import { WorkflowSection } from "@/components/workflow-section";
 import { LeadsDashboard } from "@/components/leads-dashboard";
+import { LeadsTable } from "@/components/leads-table";
 import { Bell, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";

@@ -27,6 +27,9 @@ Building an AI-powered mini CRM system that intelligently discovers and ranks le
 - **2025-06-13**: Enhanced system with AI-powered lead ranking and match scoring
 - **2025-06-13**: Added comprehensive lead profiles with company details
 - **2025-06-13**: Fixed infinite loop rendering issues in email review
+- **2025-06-13**: Implemented two-tier filtering system (hard filters + ICP ranking)
+- **2025-06-13**: Added detailed client research functionality with "Show Details" button
+- **2025-06-13**: Building comprehensive leads management table with pagination, notes, starring
 
 ## User Preferences
 - Focus on real data integration over mock data

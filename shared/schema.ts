@@ -39,7 +39,11 @@ export const leads = pgTable("leads", {
   technologies: text("technologies"), // JSON array of tech stack
   socialProfiles: text("social_profiles"), // JSON object with social links
   keyPersonnel: text("key_personnel"), // JSON array of leadership
-  detailsResearched: boolean("details_researched").default(false)
+  detailsResearched: boolean("details_researched").default(false),
+  // User interaction fields
+  notes: text("notes"),
+  starred: boolean("starred").default(false),
+  createdAt: timestamp("created_at").defaultNow()
 });
 
 export const stats = pgTable("stats", {
