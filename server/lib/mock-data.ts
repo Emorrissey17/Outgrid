@@ -421,7 +421,12 @@ export function createLeadsFromCompanies(companies: MockCompany[], campaignId: n
         linkedinUrl: contact.linkedinUrl,
         avatar: contact.avatar,
         emailContent: "", // Will be populated by AI
-        status: "ready"
+        status: "ready",
+        companySize: company.size,
+        industry: company.industry,
+        location: company.location,
+        matchScore: 0, // Will be calculated by ranking system
+        matchReason: ""
       });
     });
   });

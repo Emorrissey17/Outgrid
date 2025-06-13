@@ -4,6 +4,7 @@ import { storage } from "./storage";
 import { insertCampaignSchema } from "@shared/schema";
 import { generateMockCompanies, createLeadsFromCompanies } from "./lib/mock-data";
 import { generatePersonalizedEmail } from "./lib/openai";
+import { parseICP, rankLeads } from "./lib/lead-analyzer";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   
@@ -35,15 +36,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Create campaign
       const campaign = await storage.createCampaign({ icp });
       
-      // Generate mock companies
-      const companies = generateMockCompanies(icp);
+      // Parse ICP to understand criteria
+      const criteria = parseICP(icp);
       
-      // Create leads from companies
-      const leadsData = createLeadsFromCompanies(companies, campaign.id);
+      // Generate comprehensive company database (regardless of criteria)
+      const allCompanies = generateMockCompanies(icp);
+      
+      // Create leads from all companies
+      const rawLeadsData = createLeadsFromCompanies(allCompanies, campaign.id);
+      
+      // Apply AI-powered ranking based on ICP criteria
+      const rankedLeads = rankLeads(rawLeadsData, criteria);
       
       // Save leads and generate emails
       const leads = [];
-      for (const leadData of leadsData) {
+      for (const leadData of rankedLeads) {
         try {
           // Generate personalized email using OpenAI
           const emailResult = await generatePersonalizedEmail({

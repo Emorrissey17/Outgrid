@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
-import { Send, Edit, ExternalLink, Filter, Check, Loader2, X, Search } from "lucide-react";
+import { Send, Edit, ExternalLink, Filter, Check, Loader2, X, Search, TrendingUp, MapPin, Users, Building2 } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { api, type Lead } from "@/lib/api";
 import { useToast } from "@/hooks/use-toast";
@@ -214,10 +214,49 @@ export function LeadsDashboard() {
                   <AvatarImage src={lead.avatar} alt={lead.name} />
                   <AvatarFallback>{lead.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
                 </Avatar>
-                <div>
-                  <h3 className="font-semibold text-gray-900">{lead.name}</h3>
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 mb-1">
+                    <h3 className="font-semibold text-gray-900">{lead.name}</h3>
+                    {lead.matchScore !== undefined && (
+                      <div className="flex items-center gap-1">
+                        <TrendingUp className="h-4 w-4 text-green-500" />
+                        <Badge 
+                          variant={lead.matchScore >= 80 ? "default" : lead.matchScore >= 60 ? "secondary" : "outline"}
+                          className={
+                            lead.matchScore >= 80 ? "bg-green-100 text-green-800 border-green-300" :
+                            lead.matchScore >= 60 ? "bg-yellow-100 text-yellow-800 border-yellow-300" :
+                            "bg-gray-100 text-gray-800 border-gray-300"
+                          }
+                        >
+                          {lead.matchScore}% match
+                        </Badge>
+                      </div>
+                    )}
+                  </div>
                   <p className="text-gray-600">{lead.title}</p>
-                  <p className="text-sm text-gray-500">{lead.company}</p>
+                  <div className="flex items-center gap-4 text-sm text-gray-500 mt-1">
+                    <span className="flex items-center gap-1">
+                      <Building2 className="h-3 w-3" />
+                      {lead.company}
+                    </span>
+                    {lead.location && (
+                      <span className="flex items-center gap-1">
+                        <MapPin className="h-3 w-3" />
+                        {lead.location}
+                      </span>
+                    )}
+                    {lead.companySize && (
+                      <span className="flex items-center gap-1">
+                        <Users className="h-3 w-3" />
+                        {lead.companySize}
+                      </span>
+                    )}
+                  </div>
+                  {lead.industry && (
+                    <Badge variant="outline" className="mt-2 text-xs">
+                      {lead.industry}
+                    </Badge>
+                  )}
                 </div>
               </div>
               <div className="flex items-center space-x-2">
@@ -227,6 +266,18 @@ export function LeadsDashboard() {
                 </Button>
               </div>
             </div>
+            
+            {lead.matchReason && (
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4">
+                <div className="flex items-start gap-2">
+                  <TrendingUp className="h-4 w-4 text-blue-500 mt-0.5" />
+                  <div>
+                    <h4 className="font-medium text-blue-900 text-sm">AI Match Analysis</h4>
+                    <p className="text-blue-700 text-sm mt-1">{lead.matchReason}</p>
+                  </div>
+                </div>
+              </div>
+            )}
             
             {lead.emailContent && (
               <div className="bg-gray-50 rounded-lg p-4 mb-4">

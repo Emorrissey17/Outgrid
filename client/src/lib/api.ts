@@ -20,6 +20,11 @@ export interface Lead {
   emailContent?: string;
   status: string;
   sentAt?: string;
+  companySize?: string;
+  industry?: string;
+  location?: string;
+  matchScore?: number;
+  matchReason?: string;
 }
 
 export interface Stats {

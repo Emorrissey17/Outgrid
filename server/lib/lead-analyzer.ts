@@ -10,7 +10,7 @@ export interface LeadCriteria {
   keywords?: string[];
 }
 
-export interface ScoredLead extends Omit<InsertLead, 'campaignId'> {
+export interface ScoredLead extends InsertLead {
   matchScore: number;
   matchReason: string;
 }
