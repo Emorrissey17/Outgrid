@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useLocation } from "wouter";
 import { api, Lead } from "@/lib/api";
@@ -24,10 +24,19 @@ export default function EmailReview() {
     enabled: true,
   });
 
-  const leadsWithEmails = leads.filter((lead) => lead.emailContent && lead.emailSubject);
+  const leadsWithEmails = useMemo(() => 
+    leads.filter((lead) => lead.emailContent && lead.emailSubject), 
+    [leads]
+  );
 
+  // Initialize edited emails when leads are first loaded
   useEffect(() => {
-    // Initialize edited emails with current content
+    if (leadsWithEmails.length === 0) return;
+    
+    // Only initialize if we don't have any edited emails yet
+    const hasAnyEditedEmails = Object.keys(editedEmails).length > 0;
+    if (hasAnyEditedEmails) return;
+    
     const initialEmails: Record<number, { subject: string; content: string }> = {};
     leadsWithEmails.forEach((lead) => {
       initialEmails[lead.id] = {
@@ -35,8 +44,9 @@ export default function EmailReview() {
         content: lead.emailContent || "",
       };
     });
+    
     setEditedEmails(initialEmails);
-  }, [leadsWithEmails]);
+  }, [leadsWithEmails.length]); // Only depend on the length, not the array itself
 
   const updateLeadMutation = useMutation({
     mutationFn: ({ leadId, data }: { leadId: number; data: { emailSubject?: string; emailContent?: string } }) =>
