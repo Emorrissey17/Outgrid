@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Play, Check, Loader2 } from "lucide-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useLocation } from "wouter";
 import { api } from "@/lib/api";
 import { useToast } from "@/hooks/use-toast";
 
@@ -27,6 +28,7 @@ export function WorkflowSection() {
 
   const queryClient = useQueryClient();
   const { toast } = useToast();
+  const [, setLocation] = useLocation();
 
   const createCampaignMutation = useMutation({
     mutationFn: (icp: string) => api.createCampaign(icp),
@@ -58,8 +60,13 @@ export function WorkflowSection() {
       
       toast({
         title: "Campaign Created Successfully",
-        description: `Generated ${data.leads?.length || 0} leads and ready for outreach.`,
+        description: `Generated ${data.leads?.length || 0} leads with email drafts. Review and send emails.`,
       });
+      
+      // Redirect to email review page
+      setTimeout(() => {
+        setLocation("/email-review");
+      }, 1500);
     },
     onError: (error) => {
       // Reset steps on error

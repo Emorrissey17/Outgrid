@@ -53,10 +53,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
             icp: icp
           });
           
+          leadData.emailSubject = emailResult.subject;
           leadData.emailContent = emailResult.content;
         } catch (error) {
           console.error(`Failed to generate email for ${leadData.name}:`, error);
           // Use fallback email content
+          leadData.emailSubject = `Partnership Opportunity - ${leadData.company}`;
           leadData.emailContent = `Hi ${leadData.name},\n\nI noticed ${leadData.company} and thought you might be interested in our solutions.\n\nWould you be open to a brief conversation?\n\nBest regards`;
         }
         
@@ -71,6 +73,45 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Campaign creation error:", error);
       res.status(500).json({ message: "Failed to create campaign" });
+    }
+  });
+
+  // Update a lead
+  app.patch("/api/leads/:id", async (req, res) => {
+    try {
+      const leadId = parseInt(req.params.id);
+      const updateData = req.body;
+      
+      const updatedLead = await storage.updateLead(leadId, updateData);
+      res.json(updatedLead);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to update lead" });
+    }
+  });
+
+  // Send selected emails in bulk
+  app.post("/api/leads/send-selected", async (req, res) => {
+    try {
+      const { leadIds } = req.body;
+      
+      if (!Array.isArray(leadIds) || leadIds.length === 0) {
+        return res.status(400).json({ message: "Invalid lead IDs" });
+      }
+      
+      let sentCount = 0;
+      for (const leadId of leadIds) {
+        try {
+          await storage.updateLeadStatus(leadId, "sent");
+          await storage.incrementMessagesSent();
+          sentCount++;
+        } catch (error) {
+          console.error(`Failed to send email for lead ${leadId}:`, error);
+        }
+      }
+      
+      res.json({ message: "Emails sent successfully", sent: sentCount });
+    } catch (error) {
+      res.status(500).json({ message: "Failed to send emails" });
     }
   });
 
