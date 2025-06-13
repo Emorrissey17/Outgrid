@@ -18,6 +18,7 @@ export const leads = pgTable("leads", {
   email: text("email").notNull(),
   linkedinUrl: text("linkedin_url"),
   avatar: text("avatar"),
+  emailSubject: text("email_subject"),
   emailContent: text("email_content"),
   status: text("status").notNull().default("ready"), // ready, sent, responded
   sentAt: timestamp("sent_at"),
