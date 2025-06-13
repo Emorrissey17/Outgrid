@@ -13,9 +13,17 @@ export default function Dashboard() {
       <nav className="bg-white shadow-sm border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
-            <div className="flex items-center">
-              <h1 className="text-2xl font-bold text-primary">CRM Dashboard</h1>
-              <span className="ml-2 text-sm text-gray-500">AI-Powered Outbound Automation</span>
+            <div className="flex items-center gap-8">
+              <div className="flex items-center">
+                <h1 className="text-2xl font-bold text-primary">SniprAI</h1>
+                <span className="ml-2 text-sm text-gray-500">AI-Powered Outbound Automation</span>
+              </div>
+              <div className="flex gap-6">
+                <Button variant="ghost" className="text-sm bg-blue-50 text-blue-600">Dashboard</Button>
+                <Button variant="ghost" className="text-sm" onClick={() => window.location.href = '/recent-leads'}>
+                  Recent Leads
+                </Button>
+              </div>
             </div>
             <div className="flex items-center space-x-4">
               <Button variant="ghost" size="sm">
