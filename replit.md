@@ -32,3 +32,5 @@ Building an AI-powered mini CRM system that intelligently discovers and ranks le
 - Focus on real data integration over mock data
 - Prioritize AI-powered analysis capabilities
 - Maintain comprehensive lead profiling system
+- **Two-Tier Filtering System**: Hard filters (strict requirements) + ICP description (ranking criteria)
+- **Detailed Client Research**: "Show Details" button for in-depth prospect analysis

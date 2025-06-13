@@ -18,6 +18,7 @@ interface WorkflowStep {
 }
 
 export function WorkflowSection() {
+  const [hardFilters, setHardFilters] = useState("");
   const [icp, setIcp] = useState("");
   const [steps, setSteps] = useState<WorkflowStep[]>([
     { id: 1, title: "Company Discovery", description: "AI Scraping", completed: false, active: false },
@@ -31,7 +32,7 @@ export function WorkflowSection() {
   const [, setLocation] = useLocation();
 
   const createCampaignMutation = useMutation({
-    mutationFn: (icp: string) => api.createCampaign(icp),
+    mutationFn: ({ hardFilters, icp }: { hardFilters: string; icp: string }) => api.createCampaign(icp, hardFilters),
     onMutate: () => {
       // Start workflow animation
       setSteps(prev => prev.map((step, index) => ({

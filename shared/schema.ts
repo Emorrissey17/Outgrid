@@ -6,6 +6,7 @@ import { z } from "zod";
 export const campaigns = pgTable("campaigns", {
   id: serial("id").primaryKey(),
   icp: text("icp").notNull(),
+  hardFilters: text("hard_filters"), // JSON string for strict requirements like "marketing agencies in US"
   status: text("status").notNull().default("processing"), // processing, completed, failed
   createdAt: timestamp("created_at").defaultNow(),
 });
@@ -29,6 +30,16 @@ export const leads = pgTable("leads", {
   location: text("location"),
   matchScore: integer("match_score").default(0), // 0-100 ranking score
   matchReason: text("match_reason"), // Why this lead was ranked this way
+  // Detailed client research fields
+  companyDescription: text("company_description"),
+  foundingYear: text("founding_year"),
+  revenue: text("revenue"),
+  fundingStage: text("funding_stage"),
+  recentNews: text("recent_news"),
+  technologies: text("technologies"), // JSON array of tech stack
+  socialProfiles: text("social_profiles"), // JSON object with social links
+  keyPersonnel: text("key_personnel"), // JSON array of leadership
+  detailsResearched: boolean("details_researched").default(false)
 });
 
 export const stats = pgTable("stats", {
@@ -40,6 +51,7 @@ export const stats = pgTable("stats", {
 
 export const insertCampaignSchema = createInsertSchema(campaigns).pick({
   icp: true,
+  hardFilters: true,
 });
 
 export const insertLeadSchema = createInsertSchema(leads).omit({
