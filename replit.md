@@ -30,6 +30,9 @@ Building an AI-powered mini CRM system that intelligently discovers and ranks le
 - **2025-06-13**: Implemented two-tier filtering system (hard filters + ICP ranking)
 - **2025-06-13**: Added detailed client research functionality with "Show Details" button
 - **2025-06-13**: Completed comprehensive leads management table with pagination, notes, starring, and detailed views
+- **2025-06-13**: Fixed lead generation filtering to support all industries (healthcare, finance, real estate, entertainment, outdoor recreation)
+- **2025-06-13**: Expanded lead database to 50+ companies across 10 major cities with diverse industry coverage
+- **2025-06-13**: Added Recent Leads page with navigation tabs for comprehensive lead management
 
 ## User Preferences
 - Focus on real data integration over mock data

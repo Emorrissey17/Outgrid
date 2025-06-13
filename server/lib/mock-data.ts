@@ -867,7 +867,7 @@ function checkIndustryMatch(companyIndustry: string, icp: string): boolean {
   
   // Healthcare-related keywords
   if (icp.includes('healthcare') || icp.includes('health') || icp.includes('medical') || icp.includes('medtech')) {
-    return companyIndustry.includes('health') || companyIndustry.includes('medical') || companyIndustry.includes('biotech');
+    return companyIndustry.includes('healthcare') || companyIndustry.includes('health') || companyIndustry.includes('medical') || companyIndustry.includes('biotech');
   }
   
   // Finance-related keywords  
