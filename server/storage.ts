@@ -10,6 +10,7 @@ export interface IStorage {
   createLead(lead: InsertLead): Promise<Lead>;
   getLeadsByCampaign(campaignId: number): Promise<Lead[]>;
   updateLeadStatus(id: number, status: string): Promise<void>;
+  updateLead(id: number, data: Partial<InsertLead>): Promise<Lead>;
   getLeads(): Promise<Lead[]>;
 
   // Stats methods
@@ -69,6 +70,7 @@ export class MemStorage implements IStorage {
       id,
       linkedinUrl: insertLead.linkedinUrl || null,
       avatar: insertLead.avatar || null,
+      emailSubject: insertLead.emailSubject || null,
       emailContent: insertLead.emailContent || null,
       status: insertLead.status || "ready",
       sentAt: null,
@@ -100,6 +102,17 @@ export class MemStorage implements IStorage {
       }
       this.leads.set(id, lead);
     }
+  }
+
+  async updateLead(id: number, data: Partial<InsertLead>): Promise<Lead> {
+    const lead = this.leads.get(id);
+    if (!lead) {
+      throw new Error(`Lead with id ${id} not found`);
+    }
+    
+    const updatedLead = { ...lead, ...data };
+    this.leads.set(id, updatedLead);
+    return updatedLead;
   }
 
   async getStats(): Promise<Stats> {

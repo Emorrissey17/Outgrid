@@ -19,17 +19,17 @@ export default function EmailReview() {
   const [selectedLeads, setSelectedLeads] = useState<Set<number>>(new Set());
   const [editedEmails, setEditedEmails] = useState<Record<number, { subject: string; content: string }>>({});
 
-  const { data: leads = [], isLoading } = useQuery({
+  const { data: leads = [], isLoading } = useQuery<Lead[]>({
     queryKey: ["/api/leads"],
     enabled: true,
   });
 
-  const leadsWithEmails = leads.filter((lead: Lead) => lead.emailContent && lead.emailSubject);
+  const leadsWithEmails = leads.filter((lead) => lead.emailContent && lead.emailSubject);
 
   useEffect(() => {
     // Initialize edited emails with current content
     const initialEmails: Record<number, { subject: string; content: string }> = {};
-    leadsWithEmails.forEach((lead: Lead) => {
+    leadsWithEmails.forEach((lead) => {
       initialEmails[lead.id] = {
         subject: lead.emailSubject || "",
         content: lead.emailContent || "",
@@ -78,7 +78,7 @@ export default function EmailReview() {
 
   const handleSelectAll = (checked: boolean) => {
     if (checked) {
-      setSelectedLeads(new Set(leadsWithEmails.map((lead: Lead) => lead.id)));
+      setSelectedLeads(new Set(leadsWithEmails.map((lead) => lead.id)));
     } else {
       setSelectedLeads(new Set());
     }
@@ -200,7 +200,7 @@ export default function EmailReview() {
       </div>
 
       <div className="space-y-6">
-        {leadsWithEmails.map((lead: Lead) => (
+        {leadsWithEmails.map((lead) => (
           <Card key={lead.id} className="w-full">
             <CardHeader>
               <div className="flex items-center justify-between">
