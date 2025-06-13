@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { 
@@ -22,7 +23,10 @@ import {
   DollarSign,
   Briefcase,
   StickyNote,
-  Send
+  Send,
+  Filter,
+  ArrowUpDown,
+  Search
 } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { api, type Lead } from "@/lib/api";
@@ -38,6 +42,11 @@ export function LeadsTable({ className }: LeadsTableProps) {
   const [editingNotes, setEditingNotes] = useState<number | null>(null);
   const [noteValue, setNoteValue] = useState("");
   const [showAllEmails, setShowAllEmails] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [locationFilter, setLocationFilter] = useState("all");
+  const [industryFilter, setIndustryFilter] = useState("all");
+  const [sortBy, setSortBy] = useState("matchScore");
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
   const queryClient = useQueryClient();
   const { toast } = useToast();
 
@@ -94,7 +103,13 @@ export function LeadsTable({ className }: LeadsTableProps) {
   };
 
   const getMatchScoreBadge = (score?: number) => {
-    if (!score) return null;
+    if (!score) {
+      return (
+        <Badge variant="outline" className="bg-gray-100 text-gray-600 border-gray-300">
+          Unknown
+        </Badge>
+      );
+    }
     const variant = score >= 80 ? "default" : score >= 60 ? "secondary" : "outline";
     const className = score >= 80 ? "bg-green-100 text-green-800 border-green-300" :
                      score >= 60 ? "bg-yellow-100 text-yellow-800 border-yellow-300" :
@@ -107,8 +122,81 @@ export function LeadsTable({ className }: LeadsTableProps) {
     );
   };
 
-  const leads = leadsData?.leads || [];
-  const totalPages = leadsData?.totalPages || 1;
+  // Filter and sort leads
+  const filteredAndSortedLeads = (leadsData?.leads || [])
+    .filter(lead => {
+      // Search filter
+      if (searchQuery) {
+        const query = searchQuery.toLowerCase();
+        if (!lead.name.toLowerCase().includes(query) &&
+            !lead.company.toLowerCase().includes(query) &&
+            !lead.title.toLowerCase().includes(query) &&
+            !lead.email.toLowerCase().includes(query) &&
+            !(lead.location || "").toLowerCase().includes(query) &&
+            !(lead.industry || "").toLowerCase().includes(query)) {
+          return false;
+        }
+      }
+      
+      // Location filter
+      if (locationFilter !== "all") {
+        if (!lead.location || !lead.location.toLowerCase().includes(locationFilter.toLowerCase())) {
+          return false;
+        }
+      }
+      
+      // Industry filter
+      if (industryFilter !== "all") {
+        if (!lead.industry || !lead.industry.toLowerCase().includes(industryFilter.toLowerCase())) {
+          return false;
+        }
+      }
+      
+      return true;
+    })
+    .sort((a, b) => {
+      let aValue: any, bValue: any;
+      
+      switch (sortBy) {
+        case "matchScore":
+          aValue = a.matchScore || 0;
+          bValue = b.matchScore || 0;
+          break;
+        case "name":
+          aValue = a.name;
+          bValue = b.name;
+          break;
+        case "company":
+          aValue = a.company;
+          bValue = b.company;
+          break;
+        case "location":
+          aValue = a.location || "Unknown";
+          bValue = b.location || "Unknown";
+          break;
+        case "companySize":
+          aValue = parseInt((a.companySize || "0").replace(/\D/g, "")) || 0;
+          bValue = parseInt((b.companySize || "0").replace(/\D/g, "")) || 0;
+          break;
+        default:
+          aValue = a.matchScore || 0;
+          bValue = b.matchScore || 0;
+      }
+      
+      if (sortOrder === "asc") {
+        return aValue > bValue ? 1 : -1;
+      } else {
+        return aValue < bValue ? 1 : -1;
+      }
+    });
+
+  const leads = filteredAndSortedLeads;
+  const totalPages = Math.ceil(filteredAndSortedLeads.length / 20) || 1;
+  const paginatedLeads = leads.slice((currentPage - 1) * 20, currentPage * 20);
+
+  // Get unique locations and industries for filters
+  const uniqueLocations = [...new Set((leadsData?.leads || []).map(lead => lead.location).filter(Boolean))];
+  const uniqueIndustries = [...new Set((leadsData?.leads || []).map(lead => lead.industry).filter(Boolean))];
 
   if (isLoading) {
     return (

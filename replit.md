@@ -37,3 +37,8 @@ Building an AI-powered mini CRM system that intelligently discovers and ranks le
 - Maintain comprehensive lead profiling system
 - **Two-Tier Filtering System**: Hard filters (strict requirements) + ICP description (ranking criteria)
 - **Detailed Client Research**: "Show Details" button for in-depth prospect analysis
+- **Separate Leads Management**: Remove duplicate information, dedicated page for all leads
+- **Complete Lead Data**: All leads must show location, size, match scores - mark as "Unknown" if missing
+- **Enhanced Filtering**: Filter and sort leads by location, size, match score, industry
+- **Diverse Lead Generation**: Support multiple cities and business types beyond Austin marketing
+- **Recent Leads Page**: Dedicated page showing most recent leads with full details including data, match %, employees

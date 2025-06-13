@@ -35,7 +35,6 @@ export default function Dashboard() {
         <StatsBar />
         <WorkflowSection />
         <LeadsTable />
-        <LeadsDashboard />
       </div>
     </div>
   );

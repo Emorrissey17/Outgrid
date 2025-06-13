@@ -14,7 +14,22 @@ export interface MockCompany {
   }[];
 }
 
+function extractIndustry(icp: string): string {
+  const lowerIcp = icp.toLowerCase();
+  if (lowerIcp.includes('marketing') || lowerIcp.includes('agency')) return 'marketing';
+  if (lowerIcp.includes('tech') || lowerIcp.includes('software') || lowerIcp.includes('saas')) return 'technology';
+  if (lowerIcp.includes('healthcare') || lowerIcp.includes('medical')) return 'healthcare';
+  if (lowerIcp.includes('finance') || lowerIcp.includes('fintech')) return 'finance';
+  if (lowerIcp.includes('retail') || lowerIcp.includes('ecommerce')) return 'retail';
+  if (lowerIcp.includes('manufacturing')) return 'manufacturing';
+  if (lowerIcp.includes('consulting')) return 'consulting';
+  return 'general';
+}
+
 export function generateMockCompanies(icp: string): MockCompany[] {
+  const targetLocation = extractLocation(icp);
+  const targetIndustry = extractIndustry(icp);
+  
   // Comprehensive database of mock companies across different industries and locations
   const allCompanies: MockCompany[] = [
     // Marketing Agencies - Austin (Perfect matches)
@@ -75,6 +90,189 @@ export function generateMockCompanies(icp: string): MockCompany[] {
           email: "david@capitalcitymarketing.com",
           linkedinUrl: "/in/david-kim-marketing",
           avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face"
+        }
+      ]
+    },
+    
+    // San Francisco Tech Companies
+    {
+      name: "TechFlow Innovations",
+      industry: "SaaS Technology",
+      size: "32 employees",
+      location: "San Francisco, CA",
+      contacts: [
+        {
+          name: "Alex Chen",
+          title: "Head of Growth",
+          email: "alex@techflow.com",
+          linkedinUrl: "/in/alex-chen-growth",
+          avatar: "https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?w=150&h=150&fit=crop&crop=face"
+        }
+      ]
+    },
+    {
+      name: "Bay Area Marketing Hub",
+      industry: "Digital Marketing Agency",
+      size: "28 employees",
+      location: "San Francisco, CA",
+      contacts: [
+        {
+          name: "Rachel Park",
+          title: "Creative Director",
+          email: "rachel@bayareamarketing.com",
+          linkedinUrl: "/in/rachel-park-creative",
+          avatar: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=150&h=150&fit=crop&crop=face"
+        }
+      ]
+    },
+    
+    // New York Finance & Marketing
+    {
+      name: "Wall Street Marketing Co",
+      industry: "Financial Marketing",
+      size: "41 employees",
+      location: "New York, NY",
+      contacts: [
+        {
+          name: "James Rodriguez",
+          title: "Managing Director",
+          email: "james@wallstreetmarketing.com",
+          linkedinUrl: "/in/james-rodriguez-finance",
+          avatar: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=150&h=150&fit=crop&crop=face"
+        }
+      ]
+    },
+    {
+      name: "NYC Creative Agency",
+      industry: "Creative Marketing",
+      size: "15 employees",
+      location: "New York, NY",
+      contacts: [
+        {
+          name: "Sofia Martinez",
+          title: "Founder & CEO",
+          email: "sofia@nyccreative.com",
+          linkedinUrl: "/in/sofia-martinez-creative",
+          avatar: "https://images.unsplash.com/photo-1551836022-deb4988cc6c0?w=150&h=150&fit=crop&crop=face"
+        }
+      ]
+    },
+    
+    // Chicago Business Services
+    {
+      name: "Midwest Marketing Solutions",
+      industry: "B2B Marketing",
+      size: "23 employees",
+      location: "Chicago, IL",
+      contacts: [
+        {
+          name: "Kevin Thompson",
+          title: "VP of Operations",
+          email: "kevin@midwestmarketing.com",
+          linkedinUrl: "/in/kevin-thompson-operations",
+          avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop&crop=face"
+        }
+      ]
+    },
+    
+    // Miami Healthcare Marketing
+    {
+      name: "Healthcare Marketing Pro",
+      industry: "Healthcare Marketing",
+      size: "19 employees",
+      location: "Miami, FL",
+      contacts: [
+        {
+          name: "Dr. Maria Lopez",
+          title: "Medical Marketing Director",
+          email: "maria@healthcaremarketing.com",
+          linkedinUrl: "/in/dr-maria-lopez",
+          avatar: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=150&h=150&fit=crop&crop=face"
+        }
+      ]
+    },
+    
+    // Seattle Technology
+    {
+      name: "Pacific Northwest Tech",
+      industry: "Cloud Technology",
+      size: "37 employees",
+      location: "Seattle, WA",
+      contacts: [
+        {
+          name: "Lisa Wong",
+          title: "Head of Marketing",
+          email: "lisa@pacificnwtech.com",
+          linkedinUrl: "/in/lisa-wong-tech",
+          avatar: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&h=150&fit=crop&crop=face"
+        }
+      ]
+    },
+    
+    // Boston Healthcare & Biotech
+    {
+      name: "BioTech Marketing Solutions",
+      industry: "Biotech Marketing",
+      size: "26 employees",
+      location: "Boston, MA",
+      contacts: [
+        {
+          name: "Dr. Robert Kim",
+          title: "Scientific Marketing Lead",
+          email: "robert@biotechmarketing.com",
+          linkedinUrl: "/in/dr-robert-kim",
+          avatar: "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=150&h=150&fit=crop&crop=face"
+        }
+      ]
+    },
+    
+    // Los Angeles Entertainment & Media
+    {
+      name: "Hollywood Marketing Group",
+      industry: "Entertainment Marketing",
+      size: "34 employees",
+      location: "Los Angeles, CA",
+      contacts: [
+        {
+          name: "Jennifer Davis",
+          title: "Entertainment Director",
+          email: "jennifer@hollywoodmarketing.com",
+          linkedinUrl: "/in/jennifer-davis-entertainment",
+          avatar: "https://images.unsplash.com/photo-1489424731084-a5d8b219a5bb?w=150&h=150&fit=crop&crop=face"
+        }
+      ]
+    },
+    
+    // Denver Outdoor & Adventure
+    {
+      name: "Mountain Marketing Co",
+      industry: "Outdoor Recreation Marketing",
+      size: "14 employees",
+      location: "Denver, CO",
+      contacts: [
+        {
+          name: "Mike Johnson",
+          title: "Outdoor Marketing Specialist",
+          email: "mike@mountainmarketing.com",
+          linkedinUrl: "/in/mike-johnson-outdoor",
+          avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face"
+        }
+      ]
+    },
+    
+    // Phoenix Real Estate & Construction
+    {
+      name: "Desert Marketing Solutions",
+      industry: "Real Estate Marketing",
+      size: "21 employees",
+      location: "Phoenix, AZ",
+      contacts: [
+        {
+          name: "Sarah Thompson",
+          title: "Real Estate Marketing Lead",
+          email: "sarah@desertmarketing.com",
+          linkedinUrl: "/in/sarah-thompson-realestate",
+          avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face"
         }
       ]
     },
