@@ -195,8 +195,10 @@ export function LeadsTable({ className }: LeadsTableProps) {
   const paginatedLeads = leads.slice((currentPage - 1) * 20, currentPage * 20);
 
   // Get unique locations and industries for filters
-  const uniqueLocations = [...new Set((leadsData?.leads || []).map(lead => lead.location).filter(Boolean))];
-  const uniqueIndustries = [...new Set((leadsData?.leads || []).map(lead => lead.industry).filter(Boolean))];
+  const allLocations = (leadsData?.leads || []).map(lead => lead.location).filter(Boolean) as string[];
+  const allIndustries = (leadsData?.leads || []).map(lead => lead.industry).filter(Boolean) as string[];
+  const uniqueLocations = Array.from(new Set(allLocations));
+  const uniqueIndustries = Array.from(new Set(allIndustries));
 
   if (isLoading) {
     return (
@@ -218,8 +220,8 @@ export function LeadsTable({ className }: LeadsTableProps) {
   return (
     <Card className={className}>
       <CardHeader>
-        <div className="flex justify-between items-center">
-          <CardTitle>Leads Management ({leadsData?.total || 0} total)</CardTitle>
+        <div className="flex justify-between items-center mb-4">
+          <CardTitle>Leads Management ({leads.length} filtered / {leadsData?.total || 0} total)</CardTitle>
           <div className="flex gap-2">
             <Dialog open={showAllEmails} onOpenChange={setShowAllEmails}>
               <DialogTrigger asChild>
@@ -259,6 +261,73 @@ export function LeadsTable({ className }: LeadsTableProps) {
             </Dialog>
           </div>
         </div>
+        
+        {/* Filtering and Search Controls */}
+        <div className="space-y-4 border-t pt-4">
+          <div className="flex flex-wrap gap-4 items-center">
+            <div className="flex-1 min-w-[200px]">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                <Input
+                  placeholder="Search leads..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-10"
+                />
+              </div>
+            </div>
+            
+            <Select value={locationFilter} onValueChange={setLocationFilter}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Filter by location" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Locations</SelectItem>
+                {uniqueLocations.map(location => (
+                  <SelectItem key={location} value={location.toLowerCase()}>
+                    {location}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            
+            <Select value={industryFilter} onValueChange={setIndustryFilter}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Filter by industry" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Industries</SelectItem>
+                {uniqueIndustries.map(industry => (
+                  <SelectItem key={industry} value={industry.toLowerCase()}>
+                    {industry}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            
+            <Select value={sortBy} onValueChange={setSortBy}>
+              <SelectTrigger className="w-[150px]">
+                <SelectValue placeholder="Sort by" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="matchScore">Match Score</SelectItem>
+                <SelectItem value="name">Name</SelectItem>
+                <SelectItem value="company">Company</SelectItem>
+                <SelectItem value="location">Location</SelectItem>
+                <SelectItem value="companySize">Company Size</SelectItem>
+              </SelectContent>
+            </Select>
+            
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setSortOrder(sortOrder === "asc" ? "desc" : "asc")}
+            >
+              <ArrowUpDown className="h-4 w-4 mr-2" />
+              {sortOrder === "asc" ? "Ascending" : "Descending"}
+            </Button>
+          </div>
+        </div>
       </CardHeader>
       <CardContent>
         <div className="rounded-md border">
@@ -276,7 +345,7 @@ export function LeadsTable({ className }: LeadsTableProps) {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {leads.map((lead) => (
+              {paginatedLeads.map((lead) => (
                 <TableRow key={lead.id}>
                   <TableCell>
                     <Button
@@ -316,20 +385,16 @@ export function LeadsTable({ className }: LeadsTableProps) {
                     )}
                   </TableCell>
                   <TableCell>
-                    {lead.location && (
-                      <div className="flex items-center gap-1">
-                        <MapPin className="h-3 w-3 text-gray-400" />
-                        <span className="text-sm">{lead.location}</span>
-                      </div>
-                    )}
+                    <div className="flex items-center gap-1">
+                      <MapPin className="h-3 w-3 text-gray-400" />
+                      <span className="text-sm">{lead.location || "Unknown"}</span>
+                    </div>
                   </TableCell>
                   <TableCell>
-                    {lead.companySize && (
-                      <div className="flex items-center gap-1">
-                        <Users className="h-3 w-3 text-gray-400" />
-                        <span className="text-sm">{lead.companySize}</span>
-                      </div>
-                    )}
+                    <div className="flex items-center gap-1">
+                      <Users className="h-3 w-3 text-gray-400" />
+                      <span className="text-sm">{lead.companySize || "Unknown"}</span>
+                    </div>
                   </TableCell>
                   <TableCell>
                     {getMatchScoreBadge(lead.matchScore)}
