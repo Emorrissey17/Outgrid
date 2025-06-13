@@ -13,7 +13,7 @@ export default function Dashboard() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center">
-              <h1 className="text-2xl font-bold text-primary">SniprAI</h1>
+              <h1 className="text-2xl font-bold text-primary">CRM Dashboard</h1>
               <span className="ml-2 text-sm text-gray-500">AI-Powered Outbound Automation</span>
             </div>
             <div className="flex items-center space-x-4">
@@ -29,7 +29,6 @@ export default function Dashboard() {
           </div>
         </div>
       </nav>
-
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <StatsBar />
