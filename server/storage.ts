@@ -1,4 +1,6 @@
 import { campaigns, leads, stats, type Campaign, type Lead, type Stats, type InsertCampaign, type InsertLead, type InsertStats } from "@shared/schema";
+import { db } from "./db";
+import { eq, desc } from "drizzle-orm";
 
 export interface IStorage {
   // Campaign methods
@@ -19,113 +21,115 @@ export interface IStorage {
   incrementMessagesSent(): Promise<void>;
 }
 
-export class MemStorage implements IStorage {
-  private campaigns: Map<number, Campaign>;
-  private leads: Map<number, Lead>;
-  private stats: Stats;
-  private currentCampaignId: number;
-  private currentLeadId: number;
-
-  constructor() {
-    this.campaigns = new Map();
-    this.leads = new Map();
-    this.currentCampaignId = 1;
-    this.currentLeadId = 1;
-    this.stats = {
-      id: 1,
-      leadsGenerated: 0,
-      messagesSent: 0,
-      responses: 0,
-    };
-  }
-
+export class DatabaseStorage implements IStorage {
   async createCampaign(insertCampaign: InsertCampaign): Promise<Campaign> {
-    const id = this.currentCampaignId++;
-    const campaign: Campaign = {
-      ...insertCampaign,
-      id,
-      status: "processing",
-      createdAt: new Date(),
-    };
-    this.campaigns.set(id, campaign);
+    const [campaign] = await db
+      .insert(campaigns)
+      .values(insertCampaign)
+      .returning();
     return campaign;
   }
 
   async getCampaign(id: number): Promise<Campaign | undefined> {
-    return this.campaigns.get(id);
+    const [campaign] = await db.select().from(campaigns).where(eq(campaigns.id, id));
+    return campaign || undefined;
   }
 
   async updateCampaignStatus(id: number, status: string): Promise<void> {
-    const campaign = this.campaigns.get(id);
-    if (campaign) {
-      campaign.status = status;
-      this.campaigns.set(id, campaign);
-    }
+    await db
+      .update(campaigns)
+      .set({ status })
+      .where(eq(campaigns.id, id));
   }
 
   async createLead(insertLead: InsertLead): Promise<Lead> {
-    const id = this.currentLeadId++;
-    const lead: Lead = {
-      ...insertLead,
-      id,
-      linkedinUrl: insertLead.linkedinUrl || null,
-      avatar: insertLead.avatar || null,
-      emailSubject: insertLead.emailSubject || null,
-      emailContent: insertLead.emailContent || null,
-      status: insertLead.status || "ready",
-      sentAt: null,
-    };
-    this.leads.set(id, lead);
+    const [lead] = await db
+      .insert(leads)
+      .values(insertLead)
+      .returning();
     
     // Update stats
-    this.stats.leadsGenerated++;
+    await this.incrementLeadsGenerated();
     
     return lead;
   }
 
   async getLeadsByCampaign(campaignId: number): Promise<Lead[]> {
-    return Array.from(this.leads.values()).filter(
-      (lead) => lead.campaignId === campaignId,
-    );
+    return await db
+      .select()
+      .from(leads)
+      .where(eq(leads.campaignId, campaignId))
+      .orderBy(desc(leads.id));
   }
 
   async getLeads(): Promise<Lead[]> {
-    return Array.from(this.leads.values());
+    return await db.select().from(leads).orderBy(desc(leads.id));
   }
 
   async updateLeadStatus(id: number, status: string): Promise<void> {
-    const lead = this.leads.get(id);
-    if (lead) {
-      lead.status = status;
-      if (status === "sent") {
-        lead.sentAt = new Date();
-      }
-      this.leads.set(id, lead);
+    const updateData: any = { status };
+    if (status === "sent") {
+      updateData.sentAt = new Date();
     }
+    
+    await db
+      .update(leads)
+      .set(updateData)
+      .where(eq(leads.id, id));
   }
 
   async updateLead(id: number, data: Partial<InsertLead>): Promise<Lead> {
-    const lead = this.leads.get(id);
-    if (!lead) {
+    const [updatedLead] = await db
+      .update(leads)
+      .set(data)
+      .where(eq(leads.id, id))
+      .returning();
+    
+    if (!updatedLead) {
       throw new Error(`Lead with id ${id} not found`);
     }
     
-    const updatedLead = { ...lead, ...data };
-    this.leads.set(id, updatedLead);
     return updatedLead;
   }
 
   async getStats(): Promise<Stats> {
-    return this.stats;
+    let [statsRecord] = await db.select().from(stats).where(eq(stats.id, 1));
+    
+    if (!statsRecord) {
+      // Initialize stats if they don't exist
+      [statsRecord] = await db
+        .insert(stats)
+        .values({
+          leadsGenerated: 0,
+          messagesSent: 0,
+          responses: 0,
+        })
+        .returning();
+    }
+    
+    return statsRecord;
   }
 
   async updateStats(newStats: Partial<InsertStats>): Promise<void> {
-    this.stats = { ...this.stats, ...newStats };
+    await db
+      .update(stats)
+      .set(newStats)
+      .where(eq(stats.id, 1));
   }
 
   async incrementMessagesSent(): Promise<void> {
-    this.stats.messagesSent++;
+    const currentStats = await this.getStats();
+    await this.updateStats({
+      messagesSent: currentStats.messagesSent + 1,
+    });
+  }
+
+  private async incrementLeadsGenerated(): Promise<void> {
+    const currentStats = await this.getStats();
+    await this.updateStats({
+      leadsGenerated: currentStats.leadsGenerated + 1,
+    });
   }
 }
 
-export const storage = new MemStorage();
+export const storage = new DatabaseStorage();
