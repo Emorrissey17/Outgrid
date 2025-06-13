@@ -526,11 +526,283 @@ export function generateMockCompanies(icp: string): MockCompany[] {
           avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b47c?w=150&h=150&fit=crop&crop=face"
         }
       ]
+    },
+    
+    // Additional Tech Companies - Multiple Cities
+    {
+      name: "CloudFirst Solutions",
+      industry: "Cloud Technology",
+      size: "45-60 employees",
+      location: "Austin, TX",
+      contacts: [
+        {
+          name: "Marcus Johnson",
+          title: "VP of Growth", 
+          email: "marcus@cloudfirst.com",
+          linkedinUrl: "/in/marcus-johnson-growth",
+          avatar: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=150&h=150&fit=crop&crop=face"
+        }
+      ]
+    },
+    {
+      name: "DataStream Analytics",
+      industry: "Data Analytics",
+      size: "28-35 employees",
+      location: "San Francisco, CA",
+      contacts: [
+        {
+          name: "Priya Sharma",
+          title: "Head of Marketing",
+          email: "priya@datastream.ai",
+          linkedinUrl: "/in/priya-sharma-analytics",
+          avatar: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&h=150&fit=crop&crop=face"
+        }
+      ]
+    },
+    {
+      name: "FinTech Innovations NYC",
+      industry: "Financial Technology",
+      size: "75-100 employees",
+      location: "New York, NY",
+      contacts: [
+        {
+          name: "Andrew Martinez",
+          title: "Director of Business Development",
+          email: "andrew@fintechnyc.com",
+          linkedinUrl: "/in/andrew-martinez-fintech",
+          avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face"
+        }
+      ]
+    },
+    
+    // Healthcare Companies - Multiple Cities
+    {
+      name: "MedTech Solutions Boston",
+      industry: "Medical Technology",
+      size: "40-55 employees",
+      location: "Boston, MA",
+      contacts: [
+        {
+          name: "Dr. Emily Chen",
+          title: "Chief Innovation Officer",
+          email: "emily@medtechboston.com",
+          linkedinUrl: "/in/dr-emily-chen-medtech",
+          avatar: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=150&h=150&fit=crop&crop=face"
+        }
+      ]
+    },
+    {
+      name: "Chicago Health Systems",
+      industry: "Healthcare Technology",
+      size: "60-80 employees",
+      location: "Chicago, IL",
+      contacts: [
+        {
+          name: "Michael Rodriguez",
+          title: "VP of Strategy",
+          email: "michael@chicagohealth.com",
+          linkedinUrl: "/in/michael-rodriguez-health",
+          avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face"
+        }
+      ]
+    },
+    {
+      name: "Miami Medical Marketing",
+      industry: "Healthcare Marketing",
+      size: "22-30 employees",
+      location: "Miami, FL",
+      contacts: [
+        {
+          name: "Sofia Gonzalez",
+          title: "Creative Director",
+          email: "sofia@miamimedical.com",
+          linkedinUrl: "/in/sofia-gonzalez-medical",
+          avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b47c?w=150&h=150&fit=crop&crop=face"
+        }
+      ]
+    },
+    
+    // Finance & Investment - Multiple Cities
+    {
+      name: "Capital Growth Partners",
+      industry: "Investment Management",
+      size: "35-45 employees",
+      location: "New York, NY",
+      contacts: [
+        {
+          name: "Robert Kim",
+          title: "Portfolio Manager",
+          email: "robert@capitalgrowth.com",
+          linkedinUrl: "/in/robert-kim-finance",
+          avatar: "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=150&h=150&fit=crop&crop=face"
+        }
+      ]
+    },
+    {
+      name: "Seattle Investment Group",
+      industry: "Financial Services",
+      size: "50-65 employees",
+      location: "Seattle, WA",
+      contacts: [
+        {
+          name: "Jennifer Wang",
+          title: "Chief Marketing Officer",
+          email: "jennifer@seattleinvest.com",
+          linkedinUrl: "/in/jennifer-wang-investments",
+          avatar: "https://images.unsplash.com/photo-1489424731084-a5d8b219a5bb?w=150&h=150&fit=crop&crop=face"
+        }
+      ]
+    },
+    
+    // Entertainment & Media - Los Angeles Focus
+    {
+      name: "Sunset Media Productions",
+      industry: "Media Production",
+      size: "42-55 employees",
+      location: "Los Angeles, CA",
+      contacts: [
+        {
+          name: "Ryan Thompson",
+          title: "Executive Producer",
+          email: "ryan@sunsetmedia.com",
+          linkedinUrl: "/in/ryan-thompson-media",
+          avatar: "https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=150&h=150&fit=crop&crop=face"
+        }
+      ]
+    },
+    {
+      name: "Hollywood Digital Agency",
+      industry: "Digital Marketing",
+      size: "30-40 employees",
+      location: "Los Angeles, CA",
+      contacts: [
+        {
+          name: "Maria Santos",
+          title: "Digital Strategy Lead",
+          email: "maria@hollywooddigital.com",
+          linkedinUrl: "/in/maria-santos-digital",
+          avatar: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&h=150&fit=crop&crop=face"
+        }
+      ]
+    },
+    
+    // Real Estate - Multiple Cities
+    {
+      name: "Denver Property Group",
+      industry: "Real Estate",
+      size: "25-35 employees",
+      location: "Denver, CO",
+      contacts: [
+        {
+          name: "Kevin Brown",
+          title: "Managing Broker",
+          email: "kevin@denverproperties.com",
+          linkedinUrl: "/in/kevin-brown-realestate",
+          avatar: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=150&h=150&fit=crop&crop=face"
+        }
+      ]
+    },
+    {
+      name: "Phoenix Realty Solutions",
+      industry: "Real Estate Marketing",
+      size: "18-25 employees",  
+      location: "Phoenix, AZ",
+      contacts: [
+        {
+          name: "Lisa Davis",
+          title: "Marketing Director",
+          email: "lisa@phoenixrealty.com",
+          linkedinUrl: "/in/lisa-davis-realty",
+          avatar: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=150&h=150&fit=crop&crop=face"
+        }
+      ]
+    },
+    
+    // Outdoor Recreation - Denver/Seattle Focus
+    {
+      name: "Rocky Mountain Adventures",
+      industry: "Outdoor Recreation",
+      size: "15-22 employees",
+      location: "Denver, CO",
+      contacts: [
+        {
+          name: "Jake Wilson",
+          title: "Adventure Director",
+          email: "jake@rockymountain.com",
+          linkedinUrl: "/in/jake-wilson-outdoor",
+          avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face"
+        }
+      ]
+    },
+    {
+      name: "Pacific Northwest Gear",
+      industry: "Outdoor Equipment",
+      size: "38-50 employees",
+      location: "Seattle, WA", 
+      contacts: [
+        {
+          name: "Amanda Foster",
+          title: "Brand Manager",
+          email: "amanda@pnwgear.com",
+          linkedinUrl: "/in/amanda-foster-outdoor",
+          avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b47c?w=150&h=150&fit=crop&crop=face"
+        }
+      ]
+    },
+    
+    // Additional Marketing Agencies - All Cities
+    {
+      name: "Digital Dynamics Austin",
+      industry: "Digital Marketing",
+      size: "32-45 employees",
+      location: "Austin, TX",
+      contacts: [
+        {
+          name: "Carlos Mendez",
+          title: "Creative Director",
+          email: "carlos@digitaldynamics.com",
+          linkedinUrl: "/in/carlos-mendez-creative",
+          avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face"
+        }
+      ]
+    },
+    {
+      name: "Chicago Creative Collective",
+      industry: "Creative Agency",
+      size: "28-38 employees",
+      location: "Chicago, IL",
+      contacts: [
+        {
+          name: "Taylor Johnson",
+          title: "Account Director",
+          email: "taylor@chicagocreative.com",
+          linkedinUrl: "/in/taylor-johnson-creative",
+          avatar: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&h=150&fit=crop&crop=face"
+        }
+      ]
+    },
+    {
+      name: "Boston Brand Studio",
+      industry: "Brand Strategy",
+      size: "20-28 employees",
+      location: "Boston, MA",
+      contacts: [
+        {
+          name: "Alex Patterson",
+          title: "Brand Strategist",
+          email: "alex@bostonbrand.com",
+          linkedinUrl: "/in/alex-patterson-brand",
+          avatar: "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=150&h=150&fit=crop&crop=face"
+        }
+      ]
     }
   ];
 
-  // Filter companies based on ICP keywords
-  return filterCompaniesByICP(allCompanies, icp);
+  // Filter companies based on ICP keywords and return more results
+  const filteredCompanies = filterCompaniesByICP(allCompanies, icp);
+  
+  // Return more companies to generate larger lead pools (up to 50 companies instead of limiting)
+  return filteredCompanies.slice(0, Math.min(50, filteredCompanies.length));
 }
 
 function filterCompaniesByICP(companies: MockCompany[], icp: string): MockCompany[] {
