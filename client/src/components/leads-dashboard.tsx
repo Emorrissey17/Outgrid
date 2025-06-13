@@ -4,13 +4,15 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
-import { Send, Edit, ExternalLink, Filter, Check, Loader2, X, Search, TrendingUp, MapPin, Users, Building2 } from "lucide-react";
+import { Send, Edit, ExternalLink, Filter, Check, Loader2, X, Search, TrendingUp, MapPin, Users, Building2, Eye, Calendar, DollarSign, Briefcase } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { api, type Lead } from "@/lib/api";
 import { useToast } from "@/hooks/use-toast";
 
 export function LeadsDashboard() {
   const [sendingLeads, setSendingLeads] = useState<Set<number>>(new Set());
+  const [researchingLeads, setResearchingLeads] = useState<Set<number>>(new Set());
+  const [expandedLeads, setExpandedLeads] = useState<Set<number>>(new Set());
   const [showFilter, setShowFilter] = useState(false);
   const [filterQuery, setFilterQuery] = useState("");
   const queryClient = useQueryClient();
@@ -54,6 +56,42 @@ export function LeadsDashboard() {
         variant: "destructive",
       });
     }
+  });
+
+  const researchLeadMutation = useMutation({
+    mutationFn: (leadId: number) => api.researchLead(leadId),
+    onMutate: (leadId) => {
+      setResearchingLeads(prev => new Set(prev).add(leadId));
+    },
+    onSuccess: (_, leadId) => {
+      setResearchingLeads(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(leadId);
+        return newSet;
+      });
+      
+      setExpandedLeads(prev => new Set(prev).add(leadId));
+      
+      queryClient.invalidateQueries({ queryKey: ["/api/leads"] });
+      
+      toast({
+        title: "Research Complete",
+        description: "Detailed client information has been gathered.",
+      });
+    },
+    onError: (_, leadId) => {
+      setResearchingLeads(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(leadId);
+        return newSet;
+      });
+      
+      toast({
+        title: "Research Failed",
+        description: "Could not gather detailed information. Please try again.",
+        variant: "destructive",
+      });
+    },
   });
 
   // Filter leads based on search query
@@ -261,6 +299,19 @@ export function LeadsDashboard() {
               </div>
               <div className="flex items-center space-x-2">
                 {getStatusBadge(lead.status)}
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => researchLeadMutation.mutate(lead.id)}
+                  disabled={researchingLeads.has(lead.id) || lead.detailsResearched}
+                >
+                  {researchingLeads.has(lead.id) ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <Eye className="h-4 w-4" />
+                  )}
+                  {lead.detailsResearched ? "Details" : "Show Details"}
+                </Button>
                 <Button variant="ghost" size="sm">
                   <ExternalLink className="h-4 w-4" />
                 </Button>
@@ -276,6 +327,105 @@ export function LeadsDashboard() {
                     <p className="text-blue-700 text-sm mt-1">{lead.matchReason}</p>
                   </div>
                 </div>
+              </div>
+            )}
+            
+            {lead.detailsResearched && (expandedLeads.has(lead.id) || lead.detailsResearched) && (
+              <div className="bg-gradient-to-r from-green-50 to-blue-50 border border-green-200 rounded-lg p-4 mb-4">
+                <div className="flex items-center justify-between mb-3">
+                  <h4 className="font-semibold text-green-900 flex items-center gap-2">
+                    <Briefcase className="h-4 w-4" />
+                    Detailed Company Research
+                  </h4>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setExpandedLeads(prev => {
+                      const newSet = new Set(prev);
+                      if (newSet.has(lead.id)) {
+                        newSet.delete(lead.id);
+                      } else {
+                        newSet.add(lead.id);
+                      }
+                      return newSet;
+                    })}
+                  >
+                    {expandedLeads.has(lead.id) ? <X className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  </Button>
+                </div>
+                
+                {expandedLeads.has(lead.id) && (
+                  <div className="space-y-3 text-sm">
+                    {lead.companyDescription && (
+                      <div className="bg-white rounded-lg p-3 border border-green-100">
+                        <p className="text-green-800 leading-relaxed">{lead.companyDescription}</p>
+                      </div>
+                    )}
+                    
+                    <div className="grid grid-cols-2 gap-3">
+                      {lead.foundingYear && (
+                        <div className="flex items-center gap-2 text-gray-700">
+                          <Calendar className="h-4 w-4 text-blue-500" />
+                          <span className="font-medium">Founded:</span> {lead.foundingYear}
+                        </div>
+                      )}
+                      {lead.revenue && (
+                        <div className="flex items-center gap-2 text-gray-700">
+                          <DollarSign className="h-4 w-4 text-green-500" />
+                          <span className="font-medium">Revenue:</span> {lead.revenue}
+                        </div>
+                      )}
+                    </div>
+                    
+                    {lead.fundingStage && (
+                      <div className="flex items-center gap-2 text-gray-700">
+                        <TrendingUp className="h-4 w-4 text-purple-500" />
+                        <span className="font-medium">Funding Stage:</span> {lead.fundingStage}
+                      </div>
+                    )}
+                    
+                    {lead.recentNews && (
+                      <div className="bg-blue-50 rounded-lg p-3 border border-blue-100">
+                        <h5 className="font-medium text-blue-900 mb-1">Recent News & Updates</h5>
+                        <p className="text-blue-800 text-sm">{lead.recentNews}</p>
+                      </div>
+                    )}
+                    
+                    {lead.technologies && (
+                      <div>
+                        <h5 className="font-medium text-gray-900 mb-2 flex items-center gap-1">
+                          <Building2 className="h-4 w-4" />
+                          Tech Stack
+                        </h5>
+                        <div className="flex flex-wrap gap-1">
+                          {JSON.parse(lead.technologies).map((tech: string, index: number) => (
+                            <Badge key={index} variant="secondary" className="text-xs">
+                              {tech}
+                            </Badge>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                    
+                    {lead.keyPersonnel && (
+                      <div>
+                        <h5 className="font-medium text-gray-900 mb-2 flex items-center gap-1">
+                          <Users className="h-4 w-4" />
+                          Key Personnel
+                        </h5>
+                        <div className="space-y-2">
+                          {JSON.parse(lead.keyPersonnel).map((person: any, index: number) => (
+                            <div key={index} className="bg-white rounded-lg p-2 border border-gray-100">
+                              <div className="font-medium text-gray-900">{person.name}</div>
+                              <div className="text-sm text-gray-600">{person.role}</div>
+                              <div className="text-xs text-gray-500">{person.background}</div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             )}
             

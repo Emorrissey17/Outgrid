@@ -25,6 +25,16 @@ export interface Lead {
   location?: string;
   matchScore?: number;
   matchReason?: string;
+  // Detailed research fields
+  companyDescription?: string;
+  foundingYear?: string;
+  revenue?: string;
+  fundingStage?: string;
+  recentNews?: string;
+  technologies?: string; // JSON array
+  socialProfiles?: string; // JSON object
+  keyPersonnel?: string; // JSON array
+  detailsResearched?: boolean;
 }
 
 export interface Stats {
