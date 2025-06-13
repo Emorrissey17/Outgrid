@@ -60,6 +60,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       // Generate comprehensive company database
       const allCompanies = generateMockCompanies(hardFilters || icp);
+      console.log(`Generated ${allCompanies.length} companies for criteria: "${hardFilters || icp}"`);
       
       // Apply hard filters first (strict requirements)
       const filteredCompanies = allCompanies.filter(company => {
@@ -86,8 +87,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Create leads from filtered companies
       const rawLeadsData = createLeadsFromCompanies(filteredCompanies, campaign.id);
       
+      console.log(`Raw leads data: ${rawLeadsData.length}`);
+      
       // Apply AI-powered ranking based on ICP criteria
       const rankedLeads = rankLeads(rawLeadsData, rankingCriteria);
+      
+      console.log(`Filtered to ${filteredCompanies.length} companies after hard filters`);
+      console.log(`Ranked leads: ${rankedLeads.length}`);
       
       // Save leads and generate emails
       const leads = [];

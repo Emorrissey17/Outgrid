@@ -578,7 +578,7 @@ export function generateMockCompanies(icp: string): MockCompany[] {
     // Healthcare Companies - Multiple Cities
     {
       name: "MedTech Solutions Boston",
-      industry: "Medical Technology",
+      industry: "Healthcare Technology",
       size: "40-55 employees",
       location: "Boston, MA",
       contacts: [
@@ -865,13 +865,43 @@ function checkIndustryMatch(companyIndustry: string, icp: string): boolean {
     return companyIndustry.includes('legal');
   }
   
+  // Healthcare-related keywords
+  if (icp.includes('healthcare') || icp.includes('health') || icp.includes('medical') || icp.includes('medtech')) {
+    return companyIndustry.includes('health') || companyIndustry.includes('medical') || companyIndustry.includes('biotech');
+  }
+  
+  // Finance-related keywords  
+  if (icp.includes('finance') || icp.includes('financial') || icp.includes('investment') || icp.includes('fintech')) {
+    return companyIndustry.includes('financial') || companyIndustry.includes('investment') || companyIndustry.includes('fintech');
+  }
+  
+  // Real estate keywords
+  if (icp.includes('real estate') || icp.includes('realty') || icp.includes('property')) {
+    return companyIndustry.includes('real estate') || companyIndustry.includes('property');
+  }
+  
+  // Entertainment/Media keywords
+  if (icp.includes('entertainment') || icp.includes('media') || icp.includes('production')) {
+    return companyIndustry.includes('entertainment') || companyIndustry.includes('media') || companyIndustry.includes('production');
+  }
+  
+  // Outdoor recreation keywords
+  if (icp.includes('outdoor') || icp.includes('recreation') || icp.includes('adventure')) {
+    return companyIndustry.includes('outdoor') || companyIndustry.includes('recreation') || companyIndustry.includes('adventure');
+  }
+  
   return false;
 }
 
 function hasIndustryKeywords(icp: string): boolean {
   const industryKeywords = [
     'marketing', 'agency', 'advertising', 'dental', 'dentist', 'orthodont',
-    'consulting', 'consultant', 'tech', 'software', 'startup', 'law', 'legal', 'attorney'
+    'consulting', 'consultant', 'tech', 'software', 'startup', 'law', 'legal', 'attorney',
+    'healthcare', 'health', 'medical', 'medtech', 'biotech',
+    'finance', 'financial', 'investment', 'fintech',
+    'real estate', 'realty', 'property',
+    'entertainment', 'media', 'production',
+    'outdoor', 'recreation', 'adventure'
   ];
   
   return industryKeywords.some(keyword => icp.includes(keyword));
