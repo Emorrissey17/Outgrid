@@ -35,8 +35,13 @@ export interface Stats {
 }
 
 export const api = {
-  async createCampaign(icp: string): Promise<{ campaign: Campaign; leads: Lead[] }> {
-    const response = await apiRequest("POST", "/api/campaigns", { icp });
+  async createCampaign(icp: string, hardFilters?: string): Promise<{ campaign: Campaign; leads: Lead[] }> {
+    const response = await apiRequest("POST", "/api/campaigns", { icp, hardFilters });
+    return response.json();
+  },
+
+  async researchLead(leadId: number): Promise<Lead> {
+    const response = await apiRequest("POST", `/api/leads/${leadId}/research`);
     return response.json();
   },
 

@@ -106,17 +106,26 @@ export function WorkflowSection() {
   };
 
   const handleStartCampaign = () => {
+    if (!hardFilters.trim()) {
+      toast({
+        title: "Hard Filters Required",
+        description: "Please enter strict requirements (e.g., 'marketing agencies in US').",
+        variant: "destructive",
+      });
+      return;
+    }
+    
     if (!icp.trim()) {
       toast({
-        title: "ICP Required",
-        description: "Please enter your Ideal Customer Profile.",
+        title: "ICP Description Required",
+        description: "Please enter ranking criteria (e.g., '10-25 employees, run by women').",
         variant: "destructive",
       });
       return;
     }
 
     simulateSteps();
-    createCampaignMutation.mutate(icp);
+    createCampaignMutation.mutate({ hardFilters, icp });
   };
 
   const getStepIcon = (step: WorkflowStep) => {
@@ -147,32 +156,55 @@ export function WorkflowSection() {
       </div>
       
       <CardContent className="p-6">
-        <div className="mb-6">
-          <Label htmlFor="icp-input" className="block text-sm font-medium text-gray-700 mb-2">
-            Ideal Customer Profile
-          </Label>
-          <div className="flex space-x-4">
+        <div className="space-y-6 mb-6">
+          <div>
+            <Label htmlFor="hard-filters-input" className="block text-sm font-medium text-gray-700 mb-2">
+              Hard Filters <span className="text-red-500">*</span>
+            </Label>
+            <p className="text-xs text-gray-500 mb-2">
+              Strict requirements that must be met (e.g., "marketing agencies in US")
+            </p>
             <Input
-              id="icp-input"
+              id="hard-filters-input"
               type="text"
-              placeholder="e.g., marketing agencies in Austin with 10-50 employees"
-              value={icp}
-              onChange={(e) => setIcp(e.target.value)}
-              className="flex-1"
+              placeholder="e.g., marketing agencies in the United States"
+              value={hardFilters}
+              onChange={(e) => setHardFilters(e.target.value)}
+              className="w-full"
               disabled={createCampaignMutation.isPending}
             />
-            <Button 
-              onClick={handleStartCampaign}
-              disabled={createCampaignMutation.isPending}
-              className="px-6"
-            >
-              {createCampaignMutation.isPending ? (
-                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-              ) : (
-                <Play className="h-4 w-4 mr-2" />
-              )}
-              Start Campaign
-            </Button>
+          </div>
+          
+          <div>
+            <Label htmlFor="icp-input" className="block text-sm font-medium text-gray-700 mb-2">
+              ICP Ranking Description <span className="text-red-500">*</span>
+            </Label>
+            <p className="text-xs text-gray-500 mb-2">
+              Preference criteria for ranking leads (e.g., "10-25 employees, run by women")
+            </p>
+            <div className="flex space-x-4">
+              <Input
+                id="icp-input"
+                type="text"
+                placeholder="e.g., 10-25 employees, run by women, growing fast"
+                value={icp}
+                onChange={(e) => setIcp(e.target.value)}
+                className="flex-1"
+                disabled={createCampaignMutation.isPending}
+              />
+              <Button 
+                onClick={handleStartCampaign}
+                disabled={createCampaignMutation.isPending}
+                className="px-6"
+              >
+                {createCampaignMutation.isPending ? (
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                ) : (
+                  <Play className="h-4 w-4 mr-2" />
+                )}
+                Start Campaign
+              </Button>
+            </div>
           </div>
         </div>
 
